@@ -7,7 +7,7 @@ class Category(models.Model):
 
     def __str__(self):
         return self.name
-
+  
 class Customer(models.Model):
     first_name = models.CharField(max_length=50)
     last_name = models.CharField(max_length=50)
