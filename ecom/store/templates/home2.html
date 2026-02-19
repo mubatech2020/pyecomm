@@ -1,49 +1,86 @@
 {% extends 'base.html' %}
 
 {% load static %}
-
+<!DOCTYPE html>
+<html lang="en">
+    <head>
+        <meta charset="utf-8" />
+        <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no" />
+        <meta name="description" content="" />
+        <meta name="author" content="" />
+        <title> PY Ecomm</title>
+        <!-- Favicon-->
+        <link rel="icon" type="image/x-icon" href="{% static 'assets/favicon.ico' %}" />
+        <!-- Bootstrap icons-->
+        <link href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.5.0/font/bootstrap-icons.css" rel="stylesheet" />
+        <!-- Core theme CSS (includes Bootstrap)-->
+        <link href="{% static 'css/styles.css' %}" rel="stylesheet" />
+    </head>
     <body>
+        <!-- Navigation-->
+      
         
-        {% block content %}
+
+
+
+          {% block content %}
 
         <!-- Header-->
-        <header class="bg-dark py-5">
+        <!-- <header class="bg-dark py-5">
             <div class="container px-4 px-lg-5 my-5">
                 <div class="text-center text-white">
                     <h1 class="display-4 fw-bolder">Shop in style</h1>
                     <p class="lead fw-normal text-white-50 mb-0">With this shop hompeage template</p>
                 </div>
             </div>
-        </header>
+        </header> -->
         <!-- Section-->
-        <section class="py-5">
+
+<!-- 
+        <div class="card" style="width: 18rem;">
+  <img src="..." class="card-img-top" alt="...">
+  <div class="card-body">
+    <h5 class="card-title">Card title</h5>
+    <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card’s content.</p>
+    <a href="#" class="btn btn-primary">Go somewhere</a>
+  </div>
+</div> -->
+       
+<section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
                 <div class="row gx-4 gx-lg-5 row-cols-2 row-cols-md-3 row-cols-xl-4 justify-content-center">
-                   {% for product in products %}
 
-                  {%if product.is_sale  %}
-                   
-                   <div class="col mb-5">
+
+                      <!-- {{ products }} -->
+         {%for product in products %}
+         {%if product.is_sale  %}
+         
+        <div class="col mb-5">
                         <div class="card h-100">
-                               <!-- Sale badge -->
+
+                            <!-- Sale badge -->
 
                              <div class="badge bg-dark text-white position-absolute" style="top:0.5rem; right:0.5rem;">Sale</div>
+
                             <!-- Product image-->
                             <img class="card-img-top" src="{{product.image.url}}" alt="..." />
                             <!-- Product details-->
                             <div class="card-body p-4">
                                 <div class="text-center">
                                     <!-- Product name-->
-                                      <h5 class="fw-bolder">{{product.name}}</h5>
+                                    <h5 class="fw-bolder">{{product.name}}</h5>
 
-                                      <div class="d-flex justify-content-center small text-warning mb-2">
+                             <div class="d-flex justify-content-center small text-warning mb-2">
                                         <div class="bi-star-fill"></div>
-                                          &nbsp;&nbsp;Sale!&nbsp;&nbsp;
                                         <div class="bi-star-fill"></div>
-                                        
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
+                                        <div class="bi-star-fill"></div>
                                     </div>
+
+
                                     <!-- Product price-->
-                                   <del>
+                                     <del>
                                         {{product.price}}
                                      </del>
                                     {{product.saleprice}}
@@ -53,52 +90,50 @@
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
-                                <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{%  url 'product' product.id %}">View Product</a></div>
+                            <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{%  url 'product' product.id %}">View Product</a></div>
                             </div>
                         </div>
-                    </div>
+                    </div>  
 
-
-
-
-                     {% else %}
-
-
-
+                  {% else %}
                     <div class="col mb-5">
                         <div class="card h-100">
                             <!-- Product image-->
                             <img class="card-img-top" src="{{product.image.url}}" alt="..." />
                             <!-- Product details-->
                             <div class="card-body p-4">
-                                <div class="text-center">
                                     <!-- Product name-->
-                                      <h5 class="fw-bolder">{{product.name}}</h5>
-
-
+                                    <h5 class="fw-bolder">{{product.name}}</h5>
                                     <!-- Product price-->
-                                  ${{product.price}}
-
-
-                                   <br/>
+                                    
+                                        {{product.price}}
+                                    
+                                    
+                                    <br>
                                      {{product.description}}
                                 </div>
                             </div>
                             <!-- Product actions-->
                             <div class="card-footer p-4 pt-0 border-top-0 bg-transparent">
                                  <div class="text-center"><a class="btn btn-outline-dark mt-auto" href="{%  url 'product' product.id %}">View Product</a></div>
-<!-- 
-                                 <button  type="button" class="btn btn-secondary"  id="add-cart2" value="{{ product.id }}">  ADD to cart</button> -->
                             </div>
                         </div>
                     </div>
 
+{% endif  %}
 
-                      {% endif  %}
-
-                     {% endfor  %}
+                    {% endfor  %}
+                   
                     
                     
+
+
+
+
+
+                    
+
+
                     <div class="col mb-5">
                         <div class="card h-100">
                             <!-- Product image-->
@@ -126,48 +161,13 @@
                             </div>
                         </div>
                     </div>
-                    
-                        
-                   
                 </div>
             </div>
         </section>
+
+
+
+        {% endblock %}
+        <!-- Footer-->
         
-    </body>
-
-         <script>
-//  check if a button is pressed 
-
-$(document).on('click', '#add-cart2', function(e){
-    e.preventDefault();
-
-    $.ajax({
-        type: 'POST',
-        url: "{% url 'cart_add' %}",
-        data: {
-            product_id: $(this).val(),
-            csrfmiddlewaretoken: '{{ csrf_token }}',
-            action: 'post'
-        },
-        success: function(json){
-            //  console.log(json);
-            // 
-             document.getElementByid("cart_quqntity").textContent =json.qty
-        },
-        error: function(xhr, errmsg, err){
-            console.log(errmsg);
-        }
-    });
-});
-
-
-        </script>
-
-
-
-
-
-
-
-    {% endblock %}
 </html>
