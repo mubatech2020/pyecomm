@@ -15,6 +15,21 @@
                 </div>
             </div>
         </header>
+
+         <form method="POST" action="{% url 'search' %}">
+    {% csrf_token %}
+    <div class="col-md-5 offset-md-3 mt-2 mb-1">
+    <input type="text" class="form-control" placeholder="Search For Products"  name="searched"/>
+     </div>
+
+
+     <button  style="margin-left: 980px; margin-top: -70px;" class="btn btn-secondary" type="submit">Search</button>
+
+
+      </form>
+
+
+
         <!-- Section-->
         <section class="py-5">
             <div class="container px-4 px-lg-5 mt-5">
@@ -160,6 +175,21 @@ $(document).on('click', '#add-cart2', function(e){
     });
 });
 
+
+
+
+// ajax search
+
+
+// fetch("{% url 'search' %}", {
+//     method: "POST",
+//     headers: {
+//         "X-CSRFToken": "{{ csrf_token }}",
+//         "Content-Type": "application/json"
+//     }
+// })
+// .then(response => response.text())
+// .then(data => console.log(data));
 
         </script>
 

@@ -1,9 +1,12 @@
-from store.models import Product
+from store.models import Product,Profile
 
 class Cart():
      def __init__(self, request):
        self.session = request.session 
      # get sesion key if it exists
+
+     #get request
+       self.request = request
 
        cart =  self.session.get('session_key')
 
@@ -28,6 +31,19 @@ class Cart():
 
         self.session.modified = True
 
+        # Deal with the logedin user
+
+        if self.request.user.is_authenticated:
+            # get the current user profile
+
+            current_user = Profile.objects.filter(user__id=self.request.user.id)
+            # convert product number : quantity from single to double quote{ example '3':1 to "3":1}
+            carty = str(self.cart)
+
+            carty = carty.replace("\'", "\"")
+               # update carty to the profile model   
+                           
+            current_user.update(oldcart=str(carty))
 
      def __len__(self):
         return len (self.cart)

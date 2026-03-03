@@ -1,14 +1,57 @@
 from django.shortcuts import render ,redirect
-from .models import Product,Category
+from .models import Product,Category,Profile
 from django.contrib.auth import authenticate, login, logout
 from django.contrib import messages
 from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django  import forms
-from .forms import SignUpForm,UpdateUserForm,ChangePasswordForm
+from .forms import SignUpForm,UpdateUserForm,ChangePasswordForm,UserInfoForm
 from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
+# call this to have multiple search inputs
+from django.db.models import Q
 
+
+def search(request):
+     
+      #determine if they filled the form
+    if request.method == 'POST':
+        searched = request.POST['searched']
+  #query the products model to get products for db
+        searched = Product.objects.filter(Q(name__icontains=searched) | Q(description__icontains=searched))
+        if not searched:
+             messages.success(request, "That  Product does not exist Please Try again")
+             return render(request, 'search.html', {})
+        else:
+
+
+         return render(request, 'search.html', {'searched':searched})
+        
+
+       
+        
+    else: 
+
+        return render(request, 'search.html', {})
+  
+
+def update_info(request):
+      if request.user.is_authenticated:
+        #   current_user = User.objects.get(id=request.user.id) 
+
+        # making sure user profile is matched the profileid
+          current_user = Profile.objects.get(user__id=request.user.id) 
+          # we are either posting the user form  or none or  the current login user
+          form = UserInfoForm(request.POST or None, instance=current_user)
+          if form.is_valid():
+              form.save()
+            
+              messages.success(request, "Your Info Has Been Updated Sucessfully")
+              return redirect('home')
+          return render(request, 'update_info.html', {'form':form})
+      else:
+          messages.error(request, "You Must Be logged In")
+          return redirect('home')
 
 def update_password(request):
     if request.user.is_authenticated:
@@ -128,8 +171,8 @@ def register_user(request):
          # log in user
           user= authenticate(username=username, password=password)
           login(request,user)
-          messages.success(request,'you have registered successfully')
-          return redirect(home)
+          messages.success(request,'your  username  has been created successfully . Kindly , fill Billing information')
+          return redirect(update_info)
        else:
           messages.error(request,'wrong username or password entered')
           return redirect(login)  
