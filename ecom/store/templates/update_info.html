@@ -5,20 +5,28 @@
         <header class="bg-dark py-1">
             
                 <div class="text-center text-white">
-                    <p class="lead fw-normal text-white-50 mb-0">Update User Ibfo</p>
+                    <p class="lead fw-normal text-white-50 mb-0">Update User Info</p>
                 </div>
             
         </header>
 
 
              <div class="row">
-
+<br/>
 
              <form  method="POST" action="{% url 'update_info' %}" style="margin-left:300px;">
               {% csrf_token %}
   <div class="col-4">
+    <strong>Billing Information</strong>
+
   {{form.as_p}}
+  <br/><br/><br/>
   </div>
+  <br/><br/><br/>
+  <div class="col-4">
+    <strong>Shipping Information</strong>
+   {{shipping_form.as_p}}
+</div>
 <br></br>
   <button type="submit" class="btn btn-secondary"style="margin-bottom :20px; margin-left :60px;">Update Info</button>
  

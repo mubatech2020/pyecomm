@@ -6,11 +6,17 @@ from django.contrib.auth.models import User
 from django.contrib.auth.forms import UserCreationForm
 from django  import forms
 from .forms import SignUpForm,UpdateUserForm,ChangePasswordForm,UserInfoForm
+from payment.forms import ShippingForm
+from payment.models import ShippingAddress
+
 from django.core.exceptions import ObjectDoesNotExist
 # Create your views here.
 # call this to have multiple search inputs
 from django.db.models import Q
-
+import json
+# Import the cart from the cart app and cart.py the whole cart class
+from cart.cart import Cart
+from cart.views import cart_summary
 
 def search(request):
      
@@ -40,15 +46,31 @@ def update_info(request):
         #   current_user = User.objects.get(id=request.user.id) 
 
         # making sure user profile is matched the profileid
+
+ # Get current user
+       
           current_user = Profile.objects.get(user__id=request.user.id) 
+
+           # Get current user shipping  userinformation
+          shipping_user = ShippingAddress.objects.get(user__id=request.user.id)
           # we are either posting the user form  or none or  the current login user
           form = UserInfoForm(request.POST or None, instance=current_user)
-          if form.is_valid():
+
+
+        # Get current user shipping  form
+          shipping_form =ShippingForm(request.POST or None, instance=shipping_user)
+
+          #get shipping form
+
+          if form.is_valid() or shipping_form.is_valid():
+            #    Saving user form
               form.save()
+            #   Saving shipping form
+              shipping_form.save()
             
               messages.success(request, "Your Info Has Been Updated Sucessfully")
               return redirect('home')
-          return render(request, 'update_info.html', {'form':form})
+          return render(request, 'update_info.html', {'form':form , 'shipping_form':shipping_form})
       else:
           messages.error(request, "You Must Be logged In")
           return redirect('home')
@@ -146,10 +168,31 @@ def login_user(request):
         if user is not None:
             # A backend authenticated the credentials
             login(request,user)
+          
+        #   save the cart so anytime a user login they will see their  saved cart items
+        #    get the user profile objects
+            current_user = Profile.objects.get(user__id=request.user.id)
+
+            # get the saved parts from database
+            saved_cart = current_user.oldcart
+            # convert database string back to python dictionary
+
+            if saved_cart:
+                # convert to python dictionary using json
+                converted_cart = json.loads(saved_cart)
+        #add the loaded  cart dictionary to our session
+        #get the cart
+                cart = Cart(request)
+                # loop through the cart and add item from the database
+
+                for key,value in converted_cart.items() :
+                    cart.db_add(product=key, quantity=value)
+
+
             messages.success(request,'you have logged in successfully')
             return redirect(home)
         else:
-            messages.error(request,'wrong username or password entered')
+            messages.success(request,'wrong username or password entered')
             return redirect(login)            
     else:
       return render(request, 'login.html', {})

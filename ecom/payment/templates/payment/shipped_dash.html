@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block content %}
+
+
+
+
+        <div class="container">
+            <div class="row">
+             <div class="col-12">
+             
+<h3>shipped Items</h3>
+
+
+
+<table class="table table-striped table-hover table-bordered">
+  <thead class="table-dark">
+    <tr>
+      <th scope="col">#</th>
+      <th scope="col">Order</th>
+      <th scope="col">Price</th>
+      <th scope="col">Customer Email</th>
+      <th scope="col">Date Shipped</th>
+      <th scope="col">Shipping Status</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in orders %}
+    <tr>
+     <td>#</td>
+     <td><a href="{%  url 'orders' item.id %}">{{  item.id }} </a></td>
+       <td>{{ item.amount_paid }}</td>
+      <td>{{ item.email }}</td>
+       <td>{{ item.date_shipped }}</td>
+       <td>
+
+        <form method="POST">
+{% csrf_token %}
+
+<input type="hidden" name="shipping_status" value="false">
+<input type="hidden" name="num" value="{{item.id}}">
+ <button type="submit" class="btn btn-sm  btn-danger">Mark As shipped </button>
+</form>
+       </td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+                
+             </div>
+
+            </div>
+
+        </div>
+           {% endblock %}
+       
+        <!-- Header-->
+       
+        <!-- Section-->
+       
+        

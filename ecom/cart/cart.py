@@ -45,6 +45,45 @@ class Cart():
                            
             current_user.update(oldcart=str(carty))
 
+
+
+ # cart session adding after login
+
+
+     def db_add(self, product,quantity):
+        product_id = str(product)
+        product_qty=  str(quantity)
+
+        #check if the product is already added to cart
+        if product_id in self.cart:
+             pass
+        else :
+         #   self.cart [product_id] = {'price': str (product.price)}
+           self.cart[product_id] = int(product_qty)
+
+
+        self.session.modified = True
+
+        # Deal with the logedin user
+
+        if self.request.user.is_authenticated:
+            # get the current user profile
+
+            current_user = Profile.objects.filter(user__id=self.request.user.id)
+            # convert product number : quantity from single to double quote{ example '3':1 to "3":1}
+            carty = str(self.cart)
+
+            carty = carty.replace("\'", "\"")
+               # update carty to the profile model   
+                           
+            current_user.update(oldcart=str(carty))
+
+
+
+
+
+
+
      def __len__(self):
         return len (self.cart)
      
@@ -76,7 +115,7 @@ class Cart():
 
           products = Product.objects.filter(id__in=products_ids)
 
-          total=0  
+          total = 0  
          #   {'thats the id index': thats is the value which is the quantity according to the data coming from our code }
          #  data example {'4':3, '2':4}
 
@@ -115,9 +154,33 @@ class Cart():
 
         self.session.modified = True
 
-        thing = self.cart 
+      #   thing = self.cart 
 
+
+         # deal with the login user  to keep  delete update after adding the cart and loggin agin
+
+        if self.request.user.is_authenticated:
+            # get the current user profile
+
+            current_user = Profile.objects.filter(user__id=self.request.user.id)
+            # convert product number : quantity from single to double quote{ example '3':1 to "3":1}
+            carty = str(self.cart)
+
+            carty = carty.replace("\'", "\"")
+               # update carty to the profile model   
+                           
+            current_user.update(oldcart=str(carty))
+
+
+
+
+            # before you return the thing
+
+        thing = self.cart 
         return thing 
+     
+
+      
      
        
 
@@ -134,3 +197,27 @@ class Cart():
           del self.cart[product_id]
 
       self.session.modified = True
+
+
+      # deal with the login user  to keep  delete update after adding the cart and loggin agin
+
+      if self.request.user.is_authenticated:
+            # get the current user profile
+
+            current_user = Profile.objects.filter(user__id=self.request.user.id)
+            # convert product number : quantity from single to double quote{ example '3':1 to "3":1}
+            carty = str(self.cart)
+
+            carty = carty.replace("\'", "\"")
+               # update carty to the profile model   
+                           
+            current_user.update(oldcart=str(carty))
+
+
+
+
+
+
+
+     
+     
