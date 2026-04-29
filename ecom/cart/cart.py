@@ -2,7 +2,7 @@ from store.models import Product,Profile
 
 class Cart():
      def __init__(self, request):
-       self.session = request.session 
+       self.session = request.session
      # get sesion key if it exists
 
      #get request
@@ -218,6 +218,26 @@ class Cart():
 
 
 
+
+
+     def clear(self):
+    # 1. Delete the cart from the session
+       if 'session_key' in self.session:
+        del self.session['session_key']
+        self.session.modified = True
+
+    # 2. Use self.request.user instead of self.user
+       if self.request.user.is_authenticated:
+        # Filter and clear the database record
+        Profile.objects.filter(user=self.request.user).update(oldcart="")
+
+
+
+   
+    
+
+
+       
 
      
      

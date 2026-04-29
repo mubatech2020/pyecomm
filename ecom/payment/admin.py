@@ -1,5 +1,5 @@
 from django.contrib import admin
-from .models import ShippingAddress,Order,OrderItem
+from .models import ShippingAddress,Order,OrderItem,Payment
 from django.contrib.auth.models import User
 
 # Register your models here.
@@ -8,6 +8,7 @@ from django.contrib.auth.models import User
 admin.site.register(ShippingAddress)
 admin.site.register(Order)
 admin.site.register(OrderItem)
+admin.site.register(Payment)
 
 
 # Create an OrderItem Inline

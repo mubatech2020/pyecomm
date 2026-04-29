@@ -3,7 +3,61 @@ from django.contrib.auth.models import User
 from store.models import Product,Order
 from django.db.models.signals import post_save, pre_save
 from django.dispatch import receiver
+
 import datetime
+# //paystack option
+import secrets
+from payment.paystack import Paystack
+
+
+# // paystack payment
+
+
+class Payment(models.Model):
+    user = models.ForeignKey(User, on_delete=models.CASCADE)
+    amount = models.IntegerField(blank=True, null=True)
+    ref = models.CharField(max_length=250)
+    email = models.EmailField(max_length=250)
+    verified = models.BooleanField(default=False)
+    created_at = models.DateTimeField(auto_now_add=True)
+
+
+    def __str__(self):
+        return f"{self.user} - {self.amount}"
+    
+
+    def save(self, *args, **kwargs):
+        while not self.ref:
+            ref = secrets.token_urlsafe(50)
+            object_with_similar_ref = Payment.objects.filter(ref=ref)
+            if not object_with_similar_ref:
+                self.ref = ref
+        super().save(*args, **kwargs)
+
+    def amount_value(self):
+        return int(self.amount) * 100
+
+    def verify_payment(self):
+        paystack = Paystack()
+        status, result = paystack.verify_payment(self.ref, self.amount)
+        if status:
+            if result['amount'] / 100 == self.amount:
+                self.verified = True
+                self.save()
+        if self.verified:
+            return True 
+        else:
+            return False
+
+
+
+
+
+
+
+
+
+
 # Create your models here.
 
 class ShippingAddress(models.Model):
@@ -61,6 +115,7 @@ class Order(models.Model):
            amount_paid = models.DecimalField(max_digits=10, blank=True, decimal_places=2)
            date_ordered= models.DateTimeField(auto_now=True)
            shipped = models.BooleanField(default=False)
+           paid = models.BooleanField(default=False)
            date_shipped = models.DateTimeField(blank=True, null=True)
 #     country = models.CharField(max_length=20, blank=True)
 #     zipcode = models.CharField(max_length=20, blank=True)
