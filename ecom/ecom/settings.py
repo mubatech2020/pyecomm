@@ -12,8 +12,14 @@ https://docs.djangoproject.com/en/5.2/ref/settings/
 
 from pathlib import Path
 import os
+# //paystack 1
 from dotenv import load_dotenv
 load_dotenv()
+
+
+# //paystack 2
+from decouple import config
+
 
 
 # Build paths inside the project like this: BASE_DIR / 'subdir'.
@@ -32,9 +38,25 @@ DEBUG = True
 
 ALLOWED_HOSTS = []
 
-
+# paystack 1
 PAYSTACK_SECRET_KEY = os.getenv('SECRET_KEY')
 PAYSTACK_PUBLISHABLE = os.getenv('PUBLISHABLE')
+
+
+# paystack 2
+PAYSTACK2_SECRET_KEY = config('PAYSTACK_S_KEY')
+PAYSTACK2_PUBLIC_KEY = config('PAYSTACK_P_KEY')
+PAYSTACK2_CALLBACK_URL = 'http://127.0.0.1:8000/payment/verify/'
+
+
+
+#flutterwav
+
+FLUTTERWAVE_SECRET_KEY = config('FLUTTERWAVE_S_KEY')
+FLUTTERWAVE_PUBLIC_KEY = config('FLUTTERWAVE_P_KEY')
+FLUTTERWAVE_BASE_URL = "https://api.flutterwave.com/v3"
+
+
 
 # Application definition
 

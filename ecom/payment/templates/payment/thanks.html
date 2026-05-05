@@ -19,13 +19,23 @@
             </svg>
           </span>
           <h2 class="display-3 text-black">Thank you!</h2>
-          <p class="lead mb-5">Your order was successfully received, we'll begin processing ASAP. Here's your ref NO: <br>{{payment.ref}}</p>
+          <p class="lead mb-5">Your order was successfully received, we'll begin processing ASAP. Here's your ref NO: <br>{% if payment.ref %}
+    Reference: {{ payment.ref }}
+{% elif ref %}
+    Reference: {{ ref }}
+{% endif %}
+</p>
           <p><a href="{%  url 'home'  %}" class="btn btn-primary btn-sm btn-outline">Back to shop</a></p>
         </div>
       </div>
     </div>
 </div>
-  
+  <br/><br/> <br/><br/>
+   <br/><br/>
+    <br/><br/>
+     <br/><br/>
+      <br/><br/>
+       <br/><br/>
            {% endblock %}
        
         <!-- Header-->
